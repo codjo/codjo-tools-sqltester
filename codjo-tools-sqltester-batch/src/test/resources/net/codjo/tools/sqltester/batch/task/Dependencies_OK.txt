@@ -1,0 +1,6 @@
+table/alter/TEST_DEP.tab
+table\AP_LOG2.txt
+table\AP_TOTO.txt
+indexe/AP_TITI.txt
+procedure/sp_test.sql
+permission/grant.sql

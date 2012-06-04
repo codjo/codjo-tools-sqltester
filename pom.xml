@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+     | POM Relationships
+     -->
+
+    <parent>
+        <groupId>net.codjo.pom</groupId>
+        <artifactId>codjo-pom-library</artifactId>
+        <version>SNAPSHOT</version>
+    </parent>
+    <groupId>net.codjo.tools.sqltester</groupId>
+    <artifactId>codjo-tools-sqltester</artifactId>
+    <version>2.0-SNAPSHOT</version>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.codjo.tools.sqltester</groupId>
+                <artifactId>codjo-tools-sqltester-batch</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!--
+    | Project Information
+    -->
+
+    <name>Tools &gt; SQLTester</name>
+    <description>Permet de tester le fichier 'livraison-sql.txt'.</description>
+    <inceptionYear>2003</inceptionYear>
+
+    <!--
+    | Build Settings
+    -->
+
+    <packaging>pom</packaging>
+    <modules>
+        <module>codjo-tools-sqltester-batch</module>
+        <module>codjo-tools-sqltester-gui</module>
+    </modules>
+    <properties>
+        <databaseType>sybase</databaseType>
+    </properties>
+
+    <!--
+    | Environment Information
+    -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                             <includeScope>runtime</includeScope>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <scm>
+        <connection>scm:git:https://github.com/codjo/codjo-tools-sqltester.git</connection>
+        <developerConnection>scm:git:https://github.com/codjo/codjo-tools-sqltester.git</developerConnection>
+        <url>https://github.com/codjo/codjo-tools-sqltester</url>
+    </scm>
+</project>

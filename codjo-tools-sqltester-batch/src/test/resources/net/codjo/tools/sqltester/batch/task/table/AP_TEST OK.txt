@@ -1,0 +1,19 @@
+if exists (select 1 from  sysobjects where  id = object_id('AP_TEST') and type = 'U')
+begin
+   drop table AP_TEST
+   print 'Table AP_TEST dropped'
+end
+go
+    
+/* ============================================================ */
+create table AP_TEST
+(
+    ID_TEST      numeric(22) identity   not null, 
+)
+
+go
+
+/* ============================================================ */
+if exists (select 1 from  sysobjects where  id = object_id('AP_TEST') and type = 'U')
+   print 'Table AP_TEST created'
+go

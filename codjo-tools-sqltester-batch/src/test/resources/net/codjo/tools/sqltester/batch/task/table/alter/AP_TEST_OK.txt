@@ -1,0 +1,6 @@
+if exists (select 1 from  sysobjects where  id = object_id('AP_TEST') and type = 'U')
+begin
+   exec(sp_rename 'AP_TEST' 'AP_TOTO')
+   print 'Table AP_TEST renommee en AP_TOTO'
+end
+go

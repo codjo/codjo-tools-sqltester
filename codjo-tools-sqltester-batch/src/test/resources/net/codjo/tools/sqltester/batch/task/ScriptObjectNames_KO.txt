@@ -1,0 +1,4 @@
+table/AP_LOG.txt
+table/alter/AP_TEST_OK.txt
+table/AP_TEST wrongScriptName.txt
+permission/grant.sql

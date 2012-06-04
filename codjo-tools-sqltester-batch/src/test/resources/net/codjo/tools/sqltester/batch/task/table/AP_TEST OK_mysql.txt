@@ -1,0 +1,11 @@
+drop table if exists AP_TEST;
+
+create table AP_TEST
+(
+    MY_ID    int   not null
+)
+ENGINE=InnoDB;
+
+select 'Table AP_TEST created' as ''
+from information_schema.TABLES
+where TABLE_NAME='AP_TEST' and TABLE_TYPE='BASE TABLE';

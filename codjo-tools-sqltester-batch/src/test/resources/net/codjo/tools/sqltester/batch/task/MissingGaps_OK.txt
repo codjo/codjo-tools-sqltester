@@ -1,0 +1,5 @@
+table/AP_LOG.txt
+table\AP_LOG-gap.txt
+table/alter/AP_TEST_OK.txt
+table/drop/AP_LOG2.txt
+permission/grant.sql

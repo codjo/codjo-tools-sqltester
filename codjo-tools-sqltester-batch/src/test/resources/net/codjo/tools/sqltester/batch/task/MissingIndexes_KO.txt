@@ -1,0 +1,2 @@
+table/AP_LOG2.txt
+permission/grant.sql

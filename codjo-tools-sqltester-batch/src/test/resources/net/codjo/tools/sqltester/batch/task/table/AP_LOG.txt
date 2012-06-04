@@ -1,0 +1,46 @@
+
+/* =============================================================== */
+/*   Database name:  Pims             */
+/*   Generation Automatique : net.codjo.trigger.common.log.Log */
+/* =============================================================== */
+
+
+if exists (select 1 from  sysobjects where  id = object_id('AP_LOG') and type = 'U')
+begin
+   drop table AP_LOG
+   print 'Table AP_LOG dropped'
+end
+go
+    
+/* ============================================================ */
+create table AP_LOG
+(
+    LOG_ID      numeric(22) identity   not null, 
+    CORRELATION_ID      varchar(30)  not null, 
+    TYPE      varchar(15)  not null
+ constraint CKC_TYPE check (TYPE in ('PRE','POST','REQUEST','VL_CASCADE'))
+, 
+    INITIATOR      varchar(30)  null, 
+    CREATION_DATETIME      datetime  not null, 
+    
+    /* Declaration de la structure requestLog */
+        STEP      varchar(30)  null, 
+            ARG      varchar(255)  null, 
+        
+    /* Declaration de la structure auditLog */
+        AUDIT_TYPE      varchar(30)  null
+ constraint CKC_AUDIT_TYPE check (AUDIT_TYPE in ('FATAL','NO_ERROR','WARNING', null))
+, 
+            MESSAGE      text  null, 
+            STACK_TRACE      text  null
+)
+
+go
+
+/* ============================================================ */
+if exists (select 1 from  sysobjects where  id = object_id('AP_LOG') and type = 'U')
+   print 'Table AP_LOG created'
+go
+
+grant select, insert, delete, update, references on AP_LOG to Maintenance,Public,Batch
+go

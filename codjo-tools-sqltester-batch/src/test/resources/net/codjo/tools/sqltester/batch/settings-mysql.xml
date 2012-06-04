@@ -1,0 +1,185 @@
+<settings xmlns="http://maven.apache.org/POM/4.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <localRepository>C:/Dev/tools/maven/local/maven2</localRepository>
+
+    <servers>
+        <server>
+            <id>scp-codjo-repository</id>
+            <username>gonnot</username>
+            <privateKey>Z:\maven\keys\repository-key.openssh</privateKey>
+        </server>
+        <server>
+            <id>documentation-codjo-repository</id>
+            <username>DEV4D</username>
+            <privateKey>Z:\maven\keys\repository-key.openssh</privateKey>
+        </server>
+    </servers>
+    <mirrors>
+
+        <mirror>
+            <id>codjo-central-mirror</id>
+            <name>central (AGF mirror)</name>
+            <url>http://a7wp006:8081/proximity/repository/public</url>
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+        <mirror>
+            <id>codjo-central-snapshot-mirror</id>
+            <name>central snapshot (AGF mirror)</name>
+            <url>http://a7wp006:8081/proximity/repository/apache.snapshot</url>
+            <mirrorOf>apache.snapshots</mirrorOf>
+        </mirror>
+        <mirror>
+            <id>codjo-codehaus-mirror</id>
+            <name>codehaus (AGF mirror)</name>
+            <url>http://a7wp006:8081/proximity/repository/codehaus</url>
+            <mirrorOf>codehaus</mirrorOf>
+        </mirror>
+        <mirror>
+            <id>codjo-codehaus-snapshot-mirror</id>
+            <name>codehaus snapshot (AGF mirror)</name>
+            <url>http://a7wp006:8081/proximity/repository/codehaus.snapshot</url>
+            <mirrorOf>codehaus.snapshots</mirrorOf>
+        </mirror>
+
+    </mirrors>
+    <profiles>
+        <profile>
+            <id>codjo-repositories</id>
+            <repositories>
+                <repository>
+                    <id>codjo-repository</id>
+                    <name>Repository AGF (maven2)</name>
+                    <url>http://a7wp006:8081/proximity/repository/inhouse</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>codjo-repository-snapshot</id>
+                    <name>Repository AGF snapshot</name>
+                    <url>http://a7wp006:8081/proximity/repository/inhouse.snapshot</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>codjo-repository-plugin</id>
+                    <name>Repository AGF plugin</name>
+                    <url>http://a7wp006:8081/proximity/repository/inhouse</url>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>codjo-repository-plugin-snapshot</id>
+                    <name>Repository AGF plugin snapshot</name>
+                    <url>http://a7wp006:8081/proximity/repository/inhouse.snapshot</url>
+                    <releases>
+                        <enabled>false</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                        <updatePolicy>always</updatePolicy>
+                    </snapshots>
+                </pluginRepository>
+
+                <pluginRepository>
+                    <id>codjo-repository-plugin-public</id>
+                    <name>Repository dependance public plugin</name>
+                    <url>http://a7wp006:8081/proximity/repository/public</url>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+        <profile>
+            <id>database-developer</id>
+            <activation>
+                <property>
+                    <name>!database</name>
+                </property>
+            </activation>
+            <properties>
+                <databaseServer>ad-livmu</databaseServer>
+                <databasePort>33100</databasePort>
+                <databaseBase></databaseBase>
+                <databaseUser>lib_dbo</databaseUser>
+                <databasePassword>lib_dbo</databasePassword>
+                <databaseCatalog>lib</databaseCatalog>
+                <databaseSchema></databaseSchema>
+                <databaseType>mysql</databaseType>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>databaseType-mysql</id>
+            <activation>
+                <property>
+                    <name>databaseType</name>
+                    <value>mysql</value>
+                </property>
+            </activation>
+            <properties>
+                <databaseServer>ai-lib12</databaseServer>
+                <databasePort>34100</databasePort>
+                <databaseCatalog>LIB_INT</databaseCatalog>
+                <databaseBase>GDO_DEV</databaseBase>
+                <databaseUser>LIB_INT_dbo</databaseUser>
+                <databasePassword>LIB_INT_dbo</databasePassword>
+                <databaseJdbcUrl>jdbc:sybase:Tds:ai-lib12:34100</databaseJdbcUrl>
+                <databaseDriver>com.sybase.jdbc2.jdbc.SybDriver</databaseDriver>
+                <databaseType>sybase</databaseType>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>databaseType-hsqldb</id>
+            <activation>
+                <property>
+                    <name>databaseType</name>
+                    <value>hsqldb</value>
+                </property>
+            </activation>
+            <properties>
+                <databaseServer></databaseServer>
+                <databasePort></databasePort>
+                <databaseBase></databaseBase>
+                <databaseUser>sa</databaseUser>
+                <databasePassword></databasePassword>
+                <databaseCatalog></databaseCatalog>
+                <databaseSchema></databaseSchema>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>databaseType-oracle</id>
+            <activation>
+                <property>
+                    <name>databaseType</name>
+                    <value>oracle</value>
+                </property>
+            </activation>
+            <properties>
+                <databaseServer>ad-idw</databaseServer>
+                <databasePort>31521</databasePort>
+                <databaseBase></databaseBase>
+                <databaseUser>DEVDB5_dbo</databaseUser>
+                <databasePassword>DEVDB5_dbo</databasePassword>
+                <databaseCatalog>IDW_DEV</databaseCatalog>
+                <databaseSchema>DEVDB5_dbo</databaseSchema>
+            </properties>
+        </profile>
+    </profiles>
+    <activeProfiles>
+        <activeProfile>codjo-repositories</activeProfile>
+    </activeProfiles>
+    <pluginGroups>
+        <pluginGroup>net.codjo.maven.mojo</pluginGroup>
+    </pluginGroups>
+</settings>
