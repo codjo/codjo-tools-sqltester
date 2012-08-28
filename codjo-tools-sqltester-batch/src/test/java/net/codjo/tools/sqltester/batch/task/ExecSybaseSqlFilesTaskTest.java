@@ -5,6 +5,7 @@
  */
 package net.codjo.tools.sqltester.batch.task;
 
+import java.io.File;
 import net.codjo.database.common.api.JdbcFixture;
 import static net.codjo.database.common.api.structure.SqlTable.table;
 import net.codjo.tools.sqltester.batch.ConnectionMetaData;
@@ -22,7 +23,7 @@ public class ExecSybaseSqlFilesTaskTest extends TestCase {
     private ConnectionMetaData metadata;
 
 
-    public void ttest_execute_scriptWithError() throws Exception {
+    public void test_execute_scriptWithError() throws Exception {
         String file = getClass().getResource("ExecSqlFiles_KO.txt").getFile();
         try {
             execSqlFilesTask = new ExecSybaseSqlFilesTask(file, metadata);
@@ -33,7 +34,7 @@ public class ExecSybaseSqlFilesTaskTest extends TestCase {
             String expectedMessage =
                   "Erreur lors de l'execution du script : 'table/AP_TEST_KO.txt'" + NEW_LINE
                   + "Msg 2715, Level 16, State 1:" + NEW_LINE
-                  + "Server 'DAF_DEV1_SQL', Line 3:" + NEW_LINE
+                  + "Server 'CORP_DEV1_SQL', Line 3:" + NEW_LINE
                   + "Can't find type 'toto'.";
             assertEquals(expectedMessage, e.getMessage().trim());
             jdbcFixture.advanced().assertExists("AP_TEST");
@@ -62,7 +63,7 @@ public class ExecSybaseSqlFilesTaskTest extends TestCase {
 
 
     @Ignore
-    public void ttest_execute_ok() throws Exception {
+    public void test_execute_ok() throws Exception {
         String file = getClass().getResource("ExecSqlFiles_OK.txt").getFile();
         execSqlFilesTask = new ExecSybaseSqlFilesTask(file, metadata);
         execSqlFilesTask.execute();
@@ -73,7 +74,9 @@ public class ExecSybaseSqlFilesTaskTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         jdbcFixture.doSetUp();
-        metadata = new ConnectionMetaData(getClass().getResource("../settings-sybase.xml").getPath());
+        String settingsPath = new File(getClass().getResource("../../../../../../sybase-database.properties").getPath())
+              .getParentFile().getPath();
+        metadata = new ConnectionMetaData(settingsPath, "sybase-database.properties");
         dropTables();
     }
 

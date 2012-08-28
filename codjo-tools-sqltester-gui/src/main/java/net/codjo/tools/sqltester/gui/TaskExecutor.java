@@ -1,4 +1,10 @@
 package net.codjo.tools.sqltester.gui;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.DefaultListModel;
 import net.codjo.tools.sqltester.batch.ConnectionMetaData;
 import net.codjo.tools.sqltester.batch.task.CheckDependenciesTask;
 import net.codjo.tools.sqltester.batch.task.CheckGrantsTask;
@@ -16,14 +22,10 @@ import net.codjo.tools.sqltester.batch.task.ExecMysqlSqlFilesTask;
 import net.codjo.tools.sqltester.batch.task.ExecSybaseSqlFilesTask;
 import net.codjo.tools.sqltester.batch.task.util.Constants.BaseType;
 import net.codjo.tools.sqltester.batch.task.util.Constants.CheckType;
-import static net.codjo.tools.sqltester.batch.task.util.Constants.NEW_LINE;
 import net.codjo.tools.sqltester.batch.task.util.TaskUtil;
-import java.io.File;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import javax.swing.DefaultListModel;
 import org.apache.tools.ant.BuildException;
+
+import static net.codjo.tools.sqltester.batch.task.util.Constants.NEW_LINE;
 
 /**
  *
@@ -42,7 +44,17 @@ public class TaskExecutor {
 
     public TaskExecutor(String deliverySqlFilePath) {
         this.deliverySqlFilePath = deliverySqlFilePath;
-        metadata = new ConnectionMetaData();
+        if (!new File(deliverySqlFilePath).exists()) {
+            throw new BuildException(
+                  "Le fichier " + deliverySqlFilePath + " est introuvable");
+        }
+        try {
+            metadata = new ConnectionMetaData(deliverySqlFilePath);
+        }
+        catch (IOException e) {
+            throw new BuildException(
+                  "Le fichier database.properties est introuvable dans le répertoire target/test-classes du module sql");
+        }
     }
 
 

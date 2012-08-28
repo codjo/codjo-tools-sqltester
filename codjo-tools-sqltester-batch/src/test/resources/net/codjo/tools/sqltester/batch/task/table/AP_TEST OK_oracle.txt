@@ -1,0 +1,4 @@
+execute util_pk.dropTable('AP_TEST');
+/
+create table AP_TEST (ID_TEST NUMBER(6))
+/

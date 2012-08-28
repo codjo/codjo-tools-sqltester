@@ -16,7 +16,7 @@ public class SqlTesterGui {
 
     public static void main(String[] args) {
         LookAndFeelFactory.installDefaultLookAndFeelAndExtension();
-        new TesterLogic(args[0]);
-//        new TesterLogic("C:\\Dev\\projects\\capri\\capri-sql\\src\\main\\sql\\livraison-sql.txt");
+//        new TesterLogic(args[0]);
+        new TesterLogic("C:\\Dev\\projects\\capri\\capri-sql\\src\\main\\sql\\livraison-sql.txt");
     }
 }

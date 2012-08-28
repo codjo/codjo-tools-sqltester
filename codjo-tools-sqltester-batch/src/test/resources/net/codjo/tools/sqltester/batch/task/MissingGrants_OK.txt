@@ -1,3 +1,4 @@
 table/AP_LOG.txt
 table\AP_LOG2.txt
+table/TR_AP_ISSUER_PARENT_SEQ_I.sql
 permission/grant.sql

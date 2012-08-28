@@ -166,7 +166,9 @@ public class TaskUtil {
         return TaskUtil.doesPathStartWithDirectory(toEvaluate, "table")
                && !TaskUtil.doesPathContainDirectory(toEvaluate, "drop")
                && !TaskUtil.doesPathContainDirectory(toEvaluate, "alter")
-               && !TaskUtil.doesContainString(toEvaluate, "-gap");
+               && !TaskUtil.doesContainString(toEvaluate, "-gap")
+               && !TaskUtil.doesContainString(toEvaluate, "-sequence")
+               && !TaskUtil.doesContainString(toEvaluate, "_SEQ_I");
     }
 
 

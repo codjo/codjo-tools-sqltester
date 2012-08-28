@@ -1,4 +1,8 @@
 package net.codjo.tools.sqltester.batch;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import net.codjo.tools.sqltester.batch.task.CheckDependenciesTask;
 import net.codjo.tools.sqltester.batch.task.CheckGrantsTask;
 import net.codjo.tools.sqltester.batch.task.CheckMissingGapTask;
@@ -10,14 +14,13 @@ import net.codjo.tools.sqltester.batch.task.CheckScriptsExistenceTask;
 import net.codjo.tools.sqltester.batch.task.CheckTask;
 import net.codjo.tools.sqltester.batch.task.CheckUnusedGrantsTask;
 import net.codjo.tools.sqltester.batch.task.ExecMysqlSqlFilesTask;
+import net.codjo.tools.sqltester.batch.task.ExecOracleSqlFilesTask;
 import net.codjo.tools.sqltester.batch.task.ExecSybaseSqlFilesTask;
-import static net.codjo.tools.sqltester.batch.task.util.Constants.NEW_LINE;
 import net.codjo.tools.sqltester.batch.task.util.TaskUtil;
-import java.io.File;
-import java.sql.Connection;
-import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.apache.tools.ant.BuildException;
+
+import static net.codjo.tools.sqltester.batch.task.util.Constants.NEW_LINE;
 
 public class CheckTasksExecutor {
     private static final Logger LOG = Logger.getLogger(CheckTasksExecutor.class);
@@ -28,7 +31,13 @@ public class CheckTasksExecutor {
 
     public CheckTasksExecutor(String deliverySqlFilePath) {
         this.deliverySqlFilePath = deliverySqlFilePath;
-        metadata = new ConnectionMetaData();
+        try {
+            metadata = new ConnectionMetaData(deliverySqlFilePath);
+        }
+        catch (IOException e) {
+            throw new BuildException(
+                  "Le fichier database.properties est introuvable dans le répertoire target/test-classes du module sql");
+        }
         executeTasks();
     }
 
@@ -54,6 +63,9 @@ public class CheckTasksExecutor {
         }
         else if ("mysql".equalsIgnoreCase(metadata.getDatabaseType())) {
             status = executeCheckTasksForMysql(sqlFilePath);
+        }
+        else if ("oracle".equalsIgnoreCase(metadata.getDatabaseType())) {
+            status = executeCheckTasksForOracle(sqlFilePath);
         }
         showResult(status);
     }
@@ -103,9 +115,24 @@ public class CheckTasksExecutor {
         executeTask(new CheckMissingGrantsTask(sqlFilePath), status);
         executeTask(new CheckUnusedGrantsTask(sqlFilePath), status);
         executeTask(new CheckMissingIndexTask(sqlFilePath), status);
-        executeTask(new ExecMysqlSqlFilesTask(sqlFilePath, metadata), status);
         executeTask(new CheckMissingTablesGrantsFromFSTask(sqlFilePath), status);
         executeTask(new CheckMissingProcsGrantsFromFSTask(sqlFilePath), status);
+        executeTask(new ExecMysqlSqlFilesTask(sqlFilePath, metadata), status);
+
+        return status;
+    }
+
+
+    private StringBuffer executeCheckTasksForOracle(String sqlFilePath) {
+        StringBuffer status = new StringBuffer();
+        executeTask(new CheckScriptsExistenceTask(sqlFilePath), status);
+        executeTask(new CheckGrantsTask(sqlFilePath), status);
+        executeTask(new CheckMissingGrantsTask(sqlFilePath), status);
+        executeTask(new CheckUnusedGrantsTask(sqlFilePath), status);
+        executeTask(new CheckMissingIndexTask(sqlFilePath), status);
+        executeTask(new CheckMissingTablesGrantsFromFSTask(sqlFilePath), status);
+        executeTask(new CheckMissingProcsGrantsFromFSTask(sqlFilePath), status);
+        executeTask(new ExecOracleSqlFilesTask(sqlFilePath, metadata), status);
 
         return status;
     }

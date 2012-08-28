@@ -6,39 +6,35 @@
 package net.codjo.tools.sqltester.batch.task;
 
 import java.io.File;
-import net.codjo.tools.sqltester.batch.ConnectionMetaData;
-import static net.codjo.tools.sqltester.batch.task.util.Constants.NEW_LINE;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import junit.framework.TestCase;
+import net.codjo.tools.sqltester.batch.ConnectionMetaData;
 import org.apache.tools.ant.BuildException;
+import org.junit.Ignore;
+
+import static net.codjo.tools.sqltester.batch.task.util.Constants.NEW_LINE;
 
 /**
- * Classe de test de {@link net.codjo.tools.sqltester.batch.task.ExecSybaseSqlFilesTask}.
+ * Classe de test de {@link net.codjo.tools.sqltester.batch.task.ExecOracleSqlFilesTask}.
  */
-public class ExecMysqlSqlFilesTaskTest extends TestCase {
-    private ExecMysqlSqlFilesTask execSqlFilesTask;
+public class ExecOracleSqlFilesTaskTest extends TestCase {
+    private ExecOracleSqlFilesTask execSqlFilesTask;
     private ConnectionMetaData metadata;
 
 
     public void test_execute_scriptWithError() throws Exception {
-        String file = getClass().getResource("ExecSqlFiles_KO_mysql.txt").getFile();
+        String file = getClass().getResource("ExecSqlFiles_KO_oracle.txt").getFile();
         try {
-            execSqlFilesTask = new ExecMysqlSqlFilesTask(file, metadata);
+            execSqlFilesTask = new ExecOracleSqlFilesTask(file, metadata);
             execSqlFilesTask.execute();
             fail("Erreur dans le script AP_TEST_KO.txt !");
         }
         catch (BuildException e) {
-            String expectedMessage =
-                  "Erreur lors de l'execution de la commande." + NEW_LINE
-                  + "Error message :" + NEW_LINE
-                  + "ERROR 1064 (42000) at line 3: Erreur de syntaxe près de 'toto   not null" + NEW_LINE
-                  + ") ENGINE=InnoDB' à la ligne 3" + NEW_LINE
-                  + "Output message :";
-            assertEquals(expectedMessage, e.getMessage().trim());
+            assertTrue(e.getMessage().trim().contains("ERROR at line 1:" + NEW_LINE
+                                                      + "ORA-00907: missing right parenthesis"));
             assertTrue(doesTableExist("AP_TEST"));
             assertFalse(doesTableExist("AP_TEST2"));
         }
@@ -46,30 +42,28 @@ public class ExecMysqlSqlFilesTaskTest extends TestCase {
 
 
     public void test_execute_connectionWithError() throws Exception {
-        String file = getClass().getResource("ExecSqlFiles_KO_mysql.txt").getFile();
-        metadata.setCatalog("BIDON");
+        String file = getClass().getResource("ExecSqlFiles_KO_oracle.txt").getFile();
+        metadata.setBase("BIDON");
         try {
-            execSqlFilesTask = new ExecMysqlSqlFilesTask(file, metadata);
+            execSqlFilesTask = new ExecOracleSqlFilesTask(file, metadata);
             execSqlFilesTask.execute();
             fail("Erreur dans la connection !");
         }
         catch (BuildException e) {
-            String expectedMessage = "Erreur lors de l'execution de la commande." + NEW_LINE
-                                     + "Error message :" + NEW_LINE
-                                     + "ERROR 1044 (42000): Accès refusé pour l'utilisateur: '"
-                                     + metadata.getUser() + "'@'@%'. Base 'BIDON'"
-                                     + NEW_LINE
-                                     + "Output message :";
-            assertEquals(expectedMessage, e.getMessage().trim());
+            assertTrue(e.getMessage().trim().contains(
+                  "ERROR:" + NEW_LINE
+                  + "ORA-12154: TNS:could not resolve the connect identifier specified"));
+            metadata.setBase("IDWDEV2");
             assertFalse(doesTableExist("AP_TEST"));
             assertFalse(doesTableExist("AP_TEST2"));
         }
     }
 
 
+    @Ignore
     public void test_execute_ok() throws Exception {
-        String file = getClass().getResource("ExecSqlFiles_OK_mysql.txt").getFile();
-        execSqlFilesTask = new ExecMysqlSqlFilesTask(file, metadata);
+        String file = getClass().getResource("ExecSqlFiles_OK_oracle.txt").getFile();
+        execSqlFilesTask = new ExecOracleSqlFilesTask(file, metadata);
         execSqlFilesTask.execute();
         assertTrue(doesTableExist("AP_TEST"));
     }
@@ -77,9 +71,9 @@ public class ExecMysqlSqlFilesTaskTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        String settingsPath = new File(getClass().getResource("../../../../../../mysql-database.properties").getPath())
+        String settingsPath = new File(getClass().getResource("../../../../../../oracle-database.properties").getPath())
               .getParentFile().getPath();
-        metadata = new ConnectionMetaData(settingsPath, "mysql-database.properties");
+        metadata = new ConnectionMetaData(settingsPath, "oracle-database.properties");
         dropTables();
     }
 
@@ -99,11 +93,8 @@ public class ExecMysqlSqlFilesTaskTest extends TestCase {
     private boolean doesTableExist(String tableName) throws ClassNotFoundException, SQLException {
         Connection connection = builConnection();
         try {
-            ResultSet resultSet = connection.createStatement()
-                  .executeQuery("select 1 from information_schema.TABLES"
-                                + " where TABLE_SCHEMA = '" + metadata.getCatalog() + "'"
-                                + " and TABLE_NAME = '" + tableName + "'");
-            return resultSet.next();
+            connection.createStatement().executeQuery("select 1 from " + tableName);
+            return true;
         }
         catch (SQLException e) {
             return false;
@@ -117,7 +108,7 @@ public class ExecMysqlSqlFilesTaskTest extends TestCase {
     private void dropTable(String tableName) throws ClassNotFoundException, SQLException {
         Connection connection = builConnection();
         try {
-            connection.createStatement().execute("drop table if exists " + tableName);
+            connection.createStatement().execute("drop table " + tableName);
         }
         catch (SQLException e) {
             ;

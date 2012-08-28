@@ -71,7 +71,7 @@ class SqlDeliveryFixture implements Fixture {
         for (String object : objects) {
             script.append("grant select, insert, delete, update, references on ")
                   .append(object)
-                  .append(" to Maintenance,Administration,Batch").append(NEW_LINE)
+                  .append("\tto Maintenance,Administration,Batch").append(NEW_LINE)
                   .append("go").append(NEW_LINE);
         }
         FileUtil.saveContent(grantFile, script.toString());
