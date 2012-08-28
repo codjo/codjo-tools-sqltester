@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -76,28 +77,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>dependency-maven-plugin</artifactId>
-
-                <executions>
-                    <!-- Copy this project's dependencies to the release/lib directory -->
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>
-                                ${project.build.directory}/release/${project.artifactId}-${project.version}/lib
-                            </outputDirectory>
-                            <includeScope>runtime</includeScope>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>net.codjo.maven.mojo</groupId>
+                <artifactId>maven-config-plugin</artifactId>
             </plugin>
-
             <!-- Zip the release -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -108,11 +90,16 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar" todir="${project.build.directory}/release/${project.artifactId}-${project.version}/" />
-                                <copy file="${project.basedir}/src/config/SQLTester.cmd" todir="${project.build.directory}/release/${project.artifactId}-${project.version}/" />
-                                <replace file="${project.build.directory}/release/${project.artifactId}-${project.version}/SQLTester.cmd" token="@project.version@" value="${project.version}" />
+                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar"
+                                      todir="${project.build.directory}/release/${project.artifactId}-${project.version}/"/>
+
+                                <copy file="${project.build.directory}/config/SQLTester.cmd"
+                                      todir="${project.build.directory}/release/${project.artifactId}-${project.version}/"/>
+
                                 <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
-                                    <zipfileset dir="${project.build.directory}/release/${project.artifactId}-${project.version}/" includes="**/*" />
+                                    <zipfileset
+                                          dir="${project.build.directory}/release/${project.artifactId}-${project.version}/"
+                                          includes="**/*"/>
                                 </zip>
                             </tasks>
                         </configuration>

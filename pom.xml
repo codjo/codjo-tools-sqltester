@@ -9,7 +9,7 @@
     <parent>
         <groupId>net.codjo.pom</groupId>
         <artifactId>codjo-pom-library</artifactId>
-        <version>SNAPSHOT</version>
+        <version>2.29</version>
     </parent>
     <groupId>net.codjo.tools.sqltester</groupId>
     <artifactId>codjo-tools-sqltester</artifactId>
@@ -43,6 +43,8 @@
     </modules>
     <properties>
         <databaseType>sybase</databaseType>
+        <!-- Hack: parent.artifactId est mal resolu dans les repertoires config des sous modules -->
+        <parentArtifactId>${parent.artifactId}</parentArtifactId>
     </properties>
 
     <!--
@@ -61,8 +63,9 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                             <includeScope>runtime</includeScope>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <outputDirectory>${project.build.directory}/release/${project.artifactId}-${project.version}/lib</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
