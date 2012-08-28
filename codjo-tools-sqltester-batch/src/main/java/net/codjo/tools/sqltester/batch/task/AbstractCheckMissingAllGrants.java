@@ -27,7 +27,7 @@ public abstract class AbstractCheckMissingAllGrants implements CheckTask {
             }
             else {
                 String objectName = file.getName().substring(0, file.getName().length() - 4);
-                if (!fileContent.contains(" " + objectName + " ")) {
+                if (!fileContent.replaceAll("\t", " ").contains(" " + objectName + " ")) {
                     errors.append(new Formatter().format(getErrorMessage(), scriptType, objectName));
                     if (errors.length() > 0) {
                         errors.append(NEW_LINE);

@@ -55,6 +55,7 @@ public class TesterGui extends MultiplePageDialog {
     private List<CheckType> checkList = new ArrayList<CheckType>();
     private Map<String, CheckType> sybaseControls;
     private Map<String, CheckType> mysqlControls;
+    private Map<String, CheckType> oracleControls;
     private TaskExecutor taskExecutor;
     private JPanel resultPanel;
     private JPanel requirementPanel;
@@ -66,6 +67,7 @@ public class TesterGui extends MultiplePageDialog {
         super(owner, title);
         sybaseControls = buildSybaseControls();
         mysqlControls = buildMysqlControls();
+        oracleControls = buildOracleControls();
         this.deliverySqlFilePath = deliverySqlFilePath;
         taskExecutor = new TaskExecutor(deliverySqlFilePath);
         initGui();
@@ -213,9 +215,14 @@ public class TesterGui extends MultiplePageDialog {
                                                                 GuiUtil.getImageIcon("logo_mysql.gif"),
                                                                 getMandatoryControls(),
                                                                 getMysqlControls());
+        AbstractDialogPage oracleCheckOptions = new CheckOptions("Oracle",
+                                                                GuiUtil.getImageIcon("logo_oracle.png"),
+                                                                getMandatoryControls(),
+                                                                getOracleControls());
 
         pageList.append(sybaseCheckOptions);
         pageList.append(mysqlCheckOptions);
+        pageList.append(oracleCheckOptions);
 
         setPageList(pageList);
     }
@@ -285,6 +292,11 @@ public class TesterGui extends MultiplePageDialog {
     }
 
 
+    private String[] getOracleControls() {
+        return oracleControls.keySet().toArray(new String[oracleControls.size()]);
+    }
+
+
     private Map<String, CheckType> buildSybaseControls() {
         Map<String, CheckType> controls = new LinkedHashMap<String, CheckType>();
         addCommonControls(controls);
@@ -295,6 +307,13 @@ public class TesterGui extends MultiplePageDialog {
 
 
     private Map<String, CheckType> buildMysqlControls() {
+        Map<String, CheckType> controls = new LinkedHashMap<String, CheckType>();
+        addCommonControls(controls);
+        return controls;
+    }
+
+
+    private Map<String, CheckType> buildOracleControls() {
         Map<String, CheckType> controls = new LinkedHashMap<String, CheckType>();
         addCommonControls(controls);
         return controls;

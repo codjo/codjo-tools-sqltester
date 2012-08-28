@@ -4,7 +4,7 @@ grant select, insert, delete, update, references on PM_PUBLIC_COLUMN_LABEL to Ma
 go
 grant select, insert, delete, update, references on PM_TABLE_LABEL to Maintenance,Administration,Batch
 go
-grant select, insert, delete, update, references on AP_LOG to Maintenance,Administration,Batch
+grant select, insert, delete, update, references on AP_LOG  to Maintenance,Administration,Batch
 go
 grant select, insert, delete, update, references on AP_LOG2 to Maintenance,Administration,Batch
 go

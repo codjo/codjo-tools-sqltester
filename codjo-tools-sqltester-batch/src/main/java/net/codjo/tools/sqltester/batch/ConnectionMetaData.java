@@ -1,117 +1,111 @@
 package net.codjo.tools.sqltester.batch;
-import net.codjo.tools.sqltester.batch.task.util.TaskUtil;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
 /**
  * Détermination des paramétres de connexion de la base développeur
  */
 public class ConnectionMetaData {
-    private static final String USER_HOME = System.getProperty("user.home");
     private static final String SYBASE_DRIVER = "com.sybase.jdbc2.jdbc.SybDriver";
     private static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
-    private String databaseSettings;
+    private static final String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
+    private Properties databaseProperties;
     private String catalog;
     private String base;
-    private String user;
-    private String password;
-    private String port;
-    private String server;
-    private String databaseType;
 
 
-    public ConnectionMetaData() {
-        this(USER_HOME + "\\.m2\\settings.xml");
+    public ConnectionMetaData(String deliverySqlFilePath) throws IOException {
+        File srcSqlDir = new File(deliverySqlFilePath).getParentFile();
+        databaseProperties
+              = loadProperties(srcSqlDir.getParentFile().getParentFile().getParentFile()
+                               + "\\target\\test-classes\\database.properties");
     }
 
 
-    public ConnectionMetaData(String settingsPath) {
-        databaseSettings = getDatabaseSettings(settingsPath);
-        catalog = getDatabaseParameter("databaseCatalog");
-        base = getDatabaseParameter("databaseBase");
-        user = getDatabaseParameter("databaseUser");
-        password = getDatabaseParameter("databasePassword");
-        port = getDatabaseParameter("databasePort");
-        server = getDatabaseParameter("databaseServer");
-        databaseType = getDatabaseParameter("databaseType");
+    public ConnectionMetaData(String deliverySqlFilePath, String deliveryFileName) throws IOException {
+        File deliverySqlFile = new File(deliverySqlFilePath, deliveryFileName);
+        databaseProperties = loadProperties(deliverySqlFile.getPath());
     }
 
 
-    private String getDatabaseParameter(String parameter) {
-        int startIndex = databaseSettings.indexOf("<" + parameter + ">") + ("<" + parameter + ">").length();
-        return databaseSettings.substring(startIndex, databaseSettings.indexOf("<", startIndex));
-    }
-
-
-    String getDatabaseSettings(String settingsPath) {
-        File file = new File(settingsPath);
-        String settingsContent = TaskUtil.getContentOfFile(file);
-        int baseSettings = settingsContent.indexOf("<id>database-developer</id>");
-        int startIndex = settingsContent.indexOf("<properties>", baseSettings) + "<properties>".length() + 2;
-        int endIndex = settingsContent.indexOf("</properties>", baseSettings);
-        return settingsContent.substring(startIndex, endIndex).replaceAll(" ", "");
+    private Properties loadProperties(String configurationFile) throws IOException {
+        Properties properties = new Properties();
+        FileInputStream stream = new FileInputStream(configurationFile);
+        try {
+            properties.load(stream);
+        }
+        finally {
+            stream.close();
+        }
+        return properties;
     }
 
 
     public String getCatalog() {
-        return catalog;
+        return catalog == null ? (String)databaseProperties.get("database.catalog") : catalog;
     }
 
 
     public String getBase() {
-        return base;
+        return base == null ? (String)databaseProperties.get("database.base") : base;
     }
 
 
     public String getUser() {
-        return user;
+        return (String)databaseProperties.get("database.user");
     }
 
 
     public String getPassword() {
-        return password;
+        return (String)databaseProperties.get("database.password");
     }
 
 
     public String getPort() {
-        return port;
+        return (String)databaseProperties.get("database.port");
     }
 
 
     public String getServer() {
-        return server;
+        return (String)databaseProperties.get("database.hostname");
+    }
+
+
+    public String getDatabaseType() {
+        return (String)databaseProperties.get("database.engine");
     }
 
 
     public String getJdbcUrl() {
-        if ("sybase".equalsIgnoreCase(databaseType)) {
-            return "jdbc:sybase:Tds:" + server + ":" + port;
+        if ("sybase".equalsIgnoreCase(getDatabaseType())) {
+            return "jdbc:sybase:Tds:" + getServer() + ":" + getPort();
         }
-        else if ("mysql".equalsIgnoreCase(databaseType)) {
-            return "jdbc:mysql://" + server + ":" + port;
+        else if ("mysql".equalsIgnoreCase(getDatabaseType())) {
+            return "jdbc:mysql://" + getServer() + ":" + getPort();
+        }
+        else if ("oracle".equalsIgnoreCase(getDatabaseType())) {
+            return "jdbc:oracle:thin:@" + getServer() + ":" + getPort() + ":" + getBase();
         }
         else {
-            return "jdbc:sybase:Tds:" + server + ":" + port;
+            return "jdbc:sybase:Tds:" + getServer() + ":" + getPort();
         }
     }
 
 
     public String getDriver() {
-        if ("sybase".equalsIgnoreCase(databaseType)) {
+        if ("sybase".equalsIgnoreCase(getDatabaseType())) {
             return SYBASE_DRIVER;
         }
-        else if ("mysql".equalsIgnoreCase(databaseType)) {
+        else if ("mysql".equalsIgnoreCase(getDatabaseType())) {
             return MYSQL_DRIVER;
+        }
+        else if ("oracle".equalsIgnoreCase(getDatabaseType())) {
+            return ORACLE_DRIVER;
         }
         else {
             return SYBASE_DRIVER;
         }
-    }
-
-
-    public String getDatabaseType() {
-        if (databaseType == null) {
-            return "sybase";
-        }
-        return databaseType;
     }
 
 

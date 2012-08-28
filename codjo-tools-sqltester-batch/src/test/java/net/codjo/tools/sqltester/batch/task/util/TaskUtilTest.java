@@ -158,6 +158,8 @@ public class TaskUtilTest {
         assertFalse(TaskUtil.doesPathContainTable("table/drop/AP_TEST.tab"));
         assertFalse(TaskUtil.doesPathContainTable("table/AP_TEST-gap.tab"));
         assertFalse(TaskUtil.doesPathContainTable("view/VU_TEST.sql"));
+        assertFalse(TaskUtil.doesPathContainTable("table/Q_AP_SECURITY-sequence.sql"));
+        assertFalse(TaskUtil.doesPathContainTable("table/TR_AP_ISSUER_PARENT_SEQ_I.sql"));
     }
 
 

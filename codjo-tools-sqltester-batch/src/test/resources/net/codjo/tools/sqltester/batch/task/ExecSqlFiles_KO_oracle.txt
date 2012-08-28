@@ -1,0 +1,2 @@
+table/AP_TEST OK_oracle.txt
+table\AP_TEST_KO_oracle.txt
