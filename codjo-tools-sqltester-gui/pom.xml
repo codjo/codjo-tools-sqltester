@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.codjo.tools.sqltester</groupId>
         <artifactId>codjo-tools-sqltester</artifactId>
-        <version>2.1-SNAPSHOT</version>
+        <version>2.1</version>
     </parent>
     <dependencies>
         <dependency>
@@ -93,14 +93,11 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar"
-                                      todir="${project.build.directory}/release/${project.artifactId}-${project.version}/"/>
+                                <copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar" todir="${project.build.directory}/release/${project.artifactId}-${project.version}/" />
 
-                                <copy file="${project.basedir}/../codjo-tools-sqltester-batch/target/codjo-tools-sqltester-batch-${project.version}.jar"
-                                      todir="${project.build.directory}/release/${project.artifactId}-${project.version}/lib"/>
+                                <copy file="${project.basedir}/../codjo-tools-sqltester-batch/target/codjo-tools-sqltester-batch-${project.version}.jar" todir="${project.build.directory}/release/${project.artifactId}-${project.version}/lib" />
 
-                                <copy file="${project.build.directory}/config/SQLTesterGui.cmd"
-                                      todir="${project.build.directory}/release/${project.artifactId}-${project.version}/"/>
+                                <copy file="${project.build.directory}/config/SQLTesterGui.cmd" todir="${project.build.directory}/release/${project.artifactId}-${project.version}/" />
 
                                 <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
                                     <zipfileset dir="${project.build.directory}/release/${project.artifactId}-${project.version}/" includes="**/*" />
