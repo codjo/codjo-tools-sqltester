@@ -1,10 +1,9 @@
-@set JAVA_HOME=c:\jdk\jdk15
+@set JAVA_HOME=c:\jdk\jdk16
 @set PATH=%JAVA_HOME%\bin;%PATH%
 
 @if "%1" == "" goto FileMissing
 
-@set CLASSPATH=%CLASSPATH%;C:\Dev\platform\tools\agf-sqltester
-@java -jar C:\Dev\platform\tools\agf-sqltester\agf-sqltester-batch-@project.version@.jar %1
+@java -jar C:\Dev\platform\tools\${parentArtifactId}\${project.artifactId}-${project.version}.jar %1
 @goto End
 
 :FileMissing

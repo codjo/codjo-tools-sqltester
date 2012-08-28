@@ -3,8 +3,7 @@
 
 @if "%1" == "" goto FileMissing
 
-@set CLASSPATH=%CLASSPATH%;C:\Dev\platform\tools\codjo-tools-sqltester
-@java -jar C:\Dev\platform\tools\codjo-tools-sqltester\codjo-tools-sqltester-gui-@project.version@.jar %1
+@java -jar C:\Dev\platform\tools\${parentArtifactId}\${project.artifactId}-${project.version}.jar %1
 @goto End
 
 :FileMissing

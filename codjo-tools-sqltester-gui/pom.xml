@@ -81,28 +81,9 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>dependency-maven-plugin</artifactId>
-
-                <executions>
-                    <!-- Copy this project's dependencies to the release/lib directory -->
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>
-                                ${project.build.directory}/release/${project.artifactId}-${project.version}/lib
-                            </outputDirectory>
-                            <includeScope>runtime</includeScope>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
+                <groupId>net.codjo.maven.mojo</groupId>
+                <artifactId>maven-config-plugin</artifactId>
             </plugin>
-
             <!-- Zip the release -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -115,13 +96,13 @@
                             <tasks>
                                 <copy file="${project.build.directory}/${project.artifactId}-${project.version}.jar"
                                       todir="${project.build.directory}/release/${project.artifactId}-${project.version}/"/>
+
                                 <copy file="${project.basedir}/../codjo-tools-sqltester-batch/target/codjo-tools-sqltester-batch-${project.version}.jar"
                                       todir="${project.build.directory}/release/${project.artifactId}-${project.version}/lib"/>
-                                <copy file="${project.basedir}/src/config/SQLTesterGui.cmd"
+
+                                <copy file="${project.build.directory}/config/SQLTesterGui.cmd"
                                       todir="${project.build.directory}/release/${project.artifactId}-${project.version}/"/>
-                                <replace
-                                      file="${project.build.directory}/release/${project.artifactId}-${project.version}/SQLTesterGui.cmd"
-                                      token="@project.version@" value="${project.version}"/>
+
                                 <zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
                                     <zipfileset
                                           dir="${project.build.directory}/release/${project.artifactId}-${project.version}/"
