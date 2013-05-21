@@ -6,15 +6,16 @@
 package net.codjo.tools.sqltester.batch.task;
 
 import java.io.File;
-import net.codjo.tools.sqltester.batch.ConnectionMetaData;
-import static net.codjo.tools.sqltester.batch.task.util.Constants.NEW_LINE;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import junit.framework.TestCase;
+import net.codjo.tools.sqltester.batch.ConnectionMetaData;
 import org.apache.tools.ant.BuildException;
+
+import static net.codjo.tools.sqltester.batch.task.util.Constants.NEW_LINE;
 
 /**
  * Classe de test de {@link net.codjo.tools.sqltester.batch.task.ExecSybaseSqlFilesTask}.
@@ -56,8 +57,7 @@ public class ExecMysqlSqlFilesTaskTest extends TestCase {
         catch (BuildException e) {
             String expectedMessage = "Erreur lors de l'execution de la commande." + NEW_LINE
                                      + "Error message :" + NEW_LINE
-                                     + "ERROR 1044 (42000): Accès refusé pour l'utilisateur: '"
-                                     + metadata.getUser() + "'@'@%'. Base 'BIDON'"
+                                     + "ERROR 1049 (42000): Base 'BIDON' inconnue"
                                      + NEW_LINE
                                      + "Output message :";
             assertEquals(expectedMessage, e.getMessage().trim());
