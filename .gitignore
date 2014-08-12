@@ -1,6 +1,7 @@
 *.ipr
 *.iws
 *.iml
+*.log
 target
 .svn
 APDescription.txt

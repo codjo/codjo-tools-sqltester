@@ -34,7 +34,7 @@ public class ExecSybaseSqlFilesTaskTest extends TestCase {
             String expectedMessage =
                   "Erreur lors de l'execution du script : 'table/AP_TEST_KO.txt'" + NEW_LINE
                   + "Msg 2715, Level 16, State 1:" + NEW_LINE
-                  + "Server 'CORP_DEV1_SQL', Line 3:" + NEW_LINE
+                  + "Server 'REF_DEV1_SQL', Line 3:" + NEW_LINE
                   + "Can't find type 'toto'.";
             assertEquals(expectedMessage, e.getMessage().trim());
             jdbcFixture.advanced().assertExists("AP_TEST");
